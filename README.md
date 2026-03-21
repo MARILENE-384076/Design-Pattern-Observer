@@ -146,11 +146,53 @@ Se tivéssemos 10 janelas abertas e cada uma fizesse uma requisição por segund
 ---
 
 ## 7. Explicação da Implementação no Projeto
+
+Nesta seção, detalhamos como o código desenvolvido no **Rider** traduz os conceitos teóricos do padrão Observer para uma aplicação funcional em **C#** e **WPF**.
+
 ### 7.1. Camada Model
+A classe `Acao` atua como o **Objeto de Dados (DTO)**. Sua função é puramente carregar a informação que será transportada do motor para os observadores.
+* **Implementação:** Utilizamos o tipo `record` do C# para garantir a **imutabilidade**. Isso evita que um observador altere acidentalmente o dado antes que outros observadores o recebam.
+* **Propriedades:** Contém `Simbolo` (identificador da empresa) e `Preco` (valor atualizado).
+
 ### 7.2. O Sujeito (Motor do Mercado)
+A classe `MotorMercado` é a detentora do estado e a fonte das notificações.
+* **Gerenciamento de Assinantes:** Possui uma `List<IObservadorAcoes>` privada. O motor não sabe quais classes estão na lista, apenas que todas seguem o contrato da interface.
+* **Métodos Principais:** `Inscrever()` adiciona novos interessados à lista; `Notificar()` percorre a lista e dispara o evento.
+* **O Gatilho:** Um `System.Timers.Timer` simula a volatilidade do mercado. A cada "tick" do cronômetro, um novo preço é gerado e o método `Notificar()` é acionado.
+
 ### 7.3. A Interface do Observador
+A interface `IObservadorAcoes` é o componente que viabiliza o **Baixo Acoplamento**.
+* **O Contrato:** Define o método `void Atualizar(Acao acao)`. 
+* **Inversão de Dependência:** O motor depende desta abstração e não de classes concretas. Isso permite que amanhã possamos adicionar um "Robô de Investimento" ou um "Gerador de Logs" como observadores sem mudar uma única linha de código no motor.
+
 ### 7.4. O Observador Concreto (ViewModel)
+A `MonitorAcoesViewModel` é a classe que reage aos dados e os prepara para a visão (View).
+* **Ligação com o Sujeito:** No construtor, a ViewModel recebe a instância do motor e executa o registro: `_motor.Inscrever(this)`.
+* **Atualização da UI:** Ao receber a notificação no método `Atualizar`, a ViewModel utiliza o `Dispatcher` do WPF. Isso é fundamental, pois as notificações vêm de uma thread secundária (Timer) e a interface gráfica só pode ser manipulada pela thread principal.
+* **Data Binding:** Após processar o dado, ela dispara o `OnPropertyChanged`, fazendo com que o valor apareça instantaneamente na tela do usuário.
+  
+---
 ## 8. Integração MVVM e Boas Práticas
+
+A implementação do padrão **Observer** ganha escala e robustez ao ser integrada à arquitetura **MVVM** (*Model-View-ViewModel*), padrão de ouro para aplicações desktop em C# e WPF. Abaixo, detalhamos como essa integração ocorre e quais boas práticas foram aplicadas:
+
+### 8.1. Sincronização de Threads com Dispatcher
+Como o `MotorMercado` (Sujeito) opera em uma thread secundária (Timer) para evitar o travamento da interface (*UI Freeze*), surge um desafio técnico: o WPF não permite que threads externas modifiquem elementos visuais.
+* **Solução:** No método `Atualizar` da ViewModel, utilizamos o **`Dispatcher.Invoke`**. Ele atua como um "despachante" que envia a atualização do dado para a fila da thread principal (UI Thread), garantindo estabilidade e fluidez na atualização dos preços em tempo real.
+
+### 8.2. Data Binding e Notificação de Propriedades
+A ViewModel, ao atuar como um **Observador Concreto**, recebe o objeto `Acao` e atualiza suas propriedades locais. 
+* **Boas Práticas:** Utilizamos a interface `INotifyPropertyChanged`. Assim que o Observer "avisa" a ViewModel que o preço mudou, a ViewModel "avisa" o XAML (View) via Binding, mantendo a tela sempre sincronizada sem código de manipulação direta de componentes (Code-behind limpo).
+
+### 8.3. Princípios SOLID Aplicados
+* **Single Responsibility Principle (SRP):** O Motor de Mercado apenas gera dados; ele não sabe como eles são exibidos. A ViewModel apenas formata os dados para a tela; ela não sabe como os preços são calculados.
+* **Open/Closed Principle (OCP):** O sistema está aberto para extensão (podemos adicionar novos gráficos ou logs como novos observadores) e fechado para modificação (não precisamos mexer no código do `MotorMercado` para adicionar essas novas funcionalidades).
+* **Dependency Inversion Principle (DIP):** O Sujeito depende da interface `IObservadorAcoes` e não de classes concretas, o que facilita a criação de testes unitários e a manutenção do código.
+
+### 8.4. Gerenciamento de Memória (Unsubscribe)
+Uma boa prática implementada é garantir o descarte correto. Quando uma janela de monitoramento é fechada, a ViewModel invoca o método de **cancelamento de assinatura** no Sujeito. Isso evita o vazamento de memória (*Memory Leak*), impedindo que o motor continue tentando notificar um objeto que não deveria mais existir na memória.
+
+---
 ## 9. Análise Crítica
 ### 9.1. Comparação: Com Padrão vs. Sem Padrão
 ### 9.2. Vantagens Observadas
