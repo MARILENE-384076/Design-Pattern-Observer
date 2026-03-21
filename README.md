@@ -97,6 +97,30 @@ O funcionamento ocorre em três etapas principais:
   # INSERIR DIAGRAMA AQUI!
 ---
 ## 5. Participantes do Padrão
+
+O padrão Observer define quatro participantes principais que colaboram para realizar o desacoplamento do sistema. Abaixo, detalhamos cada um deles e como eles se traduzem no projeto de **Monitoramento de Ações**:
+
+### 1. Sujeito (Subject / Publisher)
+* **Papel:** É o objeto que detém o estado de interesse (os preços das ações) e mantém a lista de observadores.
+* **Responsabilidades:** Fornecer uma interface para anexar (`Subscribe`) e desanexar (`Unsubscribe`) observadores, além de percorrer a lista para enviar notificações.
+* **No Projeto:** É a classe `MotorMercado`.
+
+### 2. Interface do Observador (Observer / Subscriber)
+* **Papel:** Define o contrato de atualização para os objetos que devem ser notificados pelo Sujeito.
+* **Responsabilidades:** Declarar o método de notificação (geralmente chamado de `Update` ou `Atualizar`) que o Sujeito utilizará para passar as informações.
+* **No Projeto:** É a interface `IObservadorAcoes`.
+
+### 3. Observador Concreto (Concrete Observer)
+* **Papel:** Mantém uma referência ao Sujeito e implementa a interface do Observador para manter seu estado sincronizado com o do Sujeito.
+* **Responsabilidades:** Implementar a lógica de reação ao receber um dado (ex: atualizar um gráfico ou uma propriedade na tela).
+* **No Projeto:** É a classe `MonitorAcoesViewModel`.
+
+### 4. Objeto de Dados / Estado (Concrete State)
+* **Papel:** Representa a informação que está sendo transmitida do Sujeito para os Observadores.
+* **Responsabilidades:** Carregar os valores alterados (Símbolo da ação, Preço, Variação) de forma íntegra.
+* **No Projeto:** É a classe (ou record) `Acao`.
+  
+---
 ## 6. Justificativa da Escolha do Contexto (Mercado Financeiro)
 ## 7. Explicação da Implementação no Projeto
 ### 7.1. Camada Model
