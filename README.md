@@ -122,6 +122,29 @@ O padrão Observer define quatro participantes principais que colaboram para rea
   
 ---
 ## 6. Justificativa da Escolha do Contexto (Mercado Financeiro)
+
+A escolha do **Mercado Financeiro** como cenário para este projeto não foi arbitrária; ela baseia-se na natureza intrínseca dos dados financeiros, que exigem alta reatividade e integridade. Abaixo, detalhamos os motivos técnicos que tornam este contexto o "caso de uso perfeito" para o padrão Observer:
+
+### 6.1. Natureza Crítica do Tempo (Real-Time)
+No mercado de ações, a informação perde valor rapidamente. Um atraso de poucos segundos na atualização de um preço pode resultar em decisões erradas. O padrão Observer permite que o sistema seja **reativo**: em vez de a interface "perguntar" ao banco de dados se o preço mudou (o que seria lento e custoso), o motor de dados "empurra" a informação no exato milissegundo em que ela é alterada.
+
+### 6.2. Necessidade de Múltiplas Visualizações
+Em um terminal financeiro real, um único dado (ex: o preço da PETR4) precisa atualizar simultaneamente:
+1. Um **Gráfico de Candlestick** (visual).
+2. Uma **Grade de Cotações** (tabela).
+3. Um **Sistema de Alertas** (notificação de preço alto/baixo).
+4. Um **Log de Transações** (histórico).
+
+O Observer resolve isso perfeitamente, pois o motor (Sujeito) apenas emite o dado uma vez, e todos esses componentes (Observadores) reagem de forma independente.
+
+### 6.3. Escalabilidade e Desacoplamento
+Sistemas financeiros são modulares. Hoje o sistema tem uma grade de preços; amanhã pode precisar de um robô de investimentos (*Trading Bot*). Com o Observer, podemos adicionar esse robô como um novo "Assinante" sem precisar alterar uma única linha de código do Motor de Mercado. Isso respeita o **Princípio Aberto/Fechado (OCD)** do SOLID.
+
+### 6.4. Eficiência de Recursos (Push vs. Pull)
+Se tivéssemos 10 janelas abertas e cada uma fizesse uma requisição por segundo ao motor (modelo *Pull*), teríamos um tráfego desnecessário. No modelo do Observer (*Push*), o tráfego só acontece quando há uma mudança real no dado, economizando processamento e memória, o que é vital para aplicações desktop em C#/WPF.
+
+---
+
 ## 7. Explicação da Implementação no Projeto
 ### 7.1. Camada Model
 ### 7.2. O Sujeito (Motor do Mercado)
