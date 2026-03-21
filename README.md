@@ -266,7 +266,7 @@ As fontes abaixo serviram de base teórica e técnica para a fundamentação e i
 * **MICROSOFT LEARN.** *WPF Data Binding Overview*. Disponível em: [https://learn.microsoft.com/en-us/dotnet/desktop/wpf/data/data-binding-overview](https://learn.microsoft.com/en-us/dotnet/desktop/wpf/data/data-binding-overview). Acesso em: 21 mar. 2026.
 * **REFACTORING GURU.** *Observer Pattern*. Disponível em: [https://refactoring.guru/design-patterns/observer](https://refactoring.guru/design-patterns/observer). Acesso em: 21 mar. 2026.
 
-### 🛠️ Ferramentas Utilizadas
+### Ferramentas Utilizadas
 * **IDE:** JetBrains Rider / Microsoft Visual Studio 2022.
 * **Linguagem:** C# 12 (.NET 8/9).
 * **Interface:** Windows Presentation Foundation (WPF).
