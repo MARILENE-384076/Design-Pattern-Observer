@@ -71,9 +71,31 @@ Sem o padrão Observer, para que o motor financeiro atualizasse a interface, ele
 Em sistemas de monitoramento, é comum ter vários componentes (Gráficos, Grids de Preço, Alertas de Limite) dependendo do mesmo dado.
 * **O Problema:** Garantir que todos esses componentes mostrem o mesmo valor simultaneamente é complexo sem um despacho centralizado.
 * **A Solução:** Como todos os componentes se inscrevem no mesmo "Sujeito", o padrão garante a **integridade e sincronia da informação** em toda a aplicação no exato momento da notificação.
-
 ---
 ## 4. Estrutura e Diagrama de Classes
+
+A arquitetura deste projeto foi desenhada para separar completamente a lógica de geração de dados da lógica de exibição. Abaixo, detalhamos como o padrão **Observer** organiza as classes.
+
+<p style="text-align: center;">
+  <img src="./Imagens/Arquitetura.png" alt="Arquitetura Observer" style="width: 50%; display: inline-block;">
+</p>
+
+### 4.1. O Diagrama de Classes
+O diagrama abaixo representa a relação de dependência entre as classes do sistema. Note que o "Motor" (Subject) não conhece as "ViewModels" (Observers) diretamente, mas sim a interface que elas implementam.
+#INSERIR DIAGRAMA AQUI!!!
+
+### 4.2. Fluxo de Relacionamento
+1.  **Associação de Composição:** O `MotorMercado` possui uma `List<IObservadorAcoes>`. Isso permite que ele armazene múltiplos interessados sem saber de que tipo eles são (se são telas, logs ou serviços de e-mail).
+2.  **Realização de Interface:** A classe `MonitorAcoesViewModel` realiza (implementa) a interface `IObservadorAcoes`. Isso garante que ela possua o método `Atualizar()`, que será chamado pelo motor.
+3.  **Dependência de Dados:** Tanto o Sujeito quanto o Observador dependem da classe de modelo `Acao`, que serve como o "pacote" de dados trafegado durante a notificação.
+
+### 4.3. Dinâmica de Execução (Diagrama de Sequência)
+O funcionamento ocorre em três etapas principais:
+* **Inscrição:** Ao iniciar a aplicação, a `ViewModel` chama o método `Motor.Inscrever(this)`.
+* **Mudança de Estado:** O `MotorMercado` altera o preço de uma ação (via Timer).
+* **Notificação:** O Motor percorre sua lista interna e executa o método `Atualizar(acao)` de cada observador inscrito.
+  # INSERIR DIAGRAMA AQUI!
+---
 ## 5. Participantes do Padrão
 ## 6. Justificativa da Escolha do Contexto (Mercado Financeiro)
 ## 7. Explicação da Implementação no Projeto
