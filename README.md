@@ -241,4 +241,15 @@ Ferramentas como **Zabbix** ou **Grafana** monitoram a saúde de servidores. Se 
 
 ---
 ## 11. Conclusão
+
+A realização deste projeto permitiu uma compreensão profunda de como padrões de projeto comportamentais, especificamente o **Observer**, são fundamentais para a criação de sistemas reativos e de alta performance. Através da implementação de um **Monitor de Mercado Financeiro**, foi possível observar na prática a transição de um sistema acoplado para uma arquitetura modular e escalável.
+
+### Principais Aprendizados:
+* **Desacoplamento Efetivo:** A utilização de interfaces (`IObservadorAcoes`) provou que o motor de dados não precisa conhecer os detalhes da interface gráfica para funcionar, o que facilita a manutenção a longo prazo.
+* **Poder da Reatividade:** No contexto de WPF e MVVM, o padrão Observer, aliado ao `Dispatcher`, demonstrou ser a solução ideal para lidar com atualizações em tempo real vindas de threads secundárias sem comprometer a experiência do usuário.
+* **Qualidade de Software:** A aplicação dos princípios **SOLID** durante o desenvolvimento não apenas organizou o código, mas também preparou a aplicação para futuras expansões, como a adição de novos tipos de análise técnica ou bots de negociação.
+
+Em suma, o padrão Observer não é apenas uma técnica de codificação, mas uma mentalidade de design que prioriza a flexibilidade e a eficiência. Este projeto consolida o conhecimento necessário para enfrentar desafios reais de engenharia de software, onde a distribuição de informação precisa e oportuna é o diferencial entre um sistema funcional e uma aplicação de sucesso.
+
+---
 ## 12. Referências Bibliográficas
