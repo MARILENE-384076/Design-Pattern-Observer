@@ -194,9 +194,32 @@ Uma boa prática implementada é garantir o descarte correto. Quando uma janela 
 
 ---
 ## 9. Análise Crítica
+
+A aplicação do padrão Observer no Monitor de Mercado Financeiro permite uma avaliação sobre a viabilidade e o impacto da arquitetura no ciclo de vida do software. Abaixo, detalhamos os pontos observados durante o desenvolvimento:
+
 ### 9.1. Comparação: Com Padrão vs. Sem Padrão
+
+| Característica | Sem o Padrão Observer | Com o Padrão Observer |
+| :--- | :--- | :--- |
+| **Acoplamento** | **Rígido:** O Motor de Mercado precisaria ter uma referência direta para cada janela (View) ou ViewModel. | **Fraco:** O Motor conhece apenas uma Interface (`IObservadorAcoes`). |
+| **Escalabilidade** | **Difícil:** Para adicionar um novo gráfico, seria necessário alterar e recompilar o código do Motor. | **Fácil:** Basta criar uma nova classe que implemente a interface e "assinar" o motor. |
+| **Manutenção** | **Arriscada:** Mudanças na interface gráfica poderiam quebrar a lógica de negócio do motor. | **Segura:** As camadas são independentes; a lógica de negócio está protegida da UI. |
+| **Fluxo de Dados** | **Pull (Busca):** A UI precisa perguntar ao motor se o dado mudou (desperdício de CPU). | **Push (Envio):** O motor envia o dado no exato momento da mudança (eficiência). |
+
 ### 9.2. Vantagens Observadas
+
+* **Extensibilidade (OCP):** Durante o desenvolvimento, ficou claro que poderíamos adicionar um sistema de "Log de Arquivo" ou um "Alerta Sonoro" como novos observadores sem tocar em uma linha de código do `MotorMercado`.
+* **Reatividade Instantânea:** A percepção de atualização na interface WPF é imediata, essencial para o contexto financeiro onde milissegundos importam.
+* **Código Limpo:** A separação de responsabilidades facilitou a leitura do código, deixando claro onde termina a regra de negócio e onde começa a lógica de exibição.
+
 ### 9.3. Desvantagens e Limitações
+
+* **Complexidade Inicial:** Para um projeto simples, o Observer introduz mais classes e interfaces do que uma solução direta, o que exige maior esforço inicial de design.
+* **Risco de Memory Leaks:** Se o desenvolvedor esquecer de chamar o método de "cancelamento de assinatura" (`Unsubscribe`) ao fechar uma janela, o motor continuará mantendo uma referência para um objeto que deveria ter sido destruído, impedindo a limpeza pelo *Garbage Collector*.
+* **Ordem de Notificação:** O padrão não garante a ordem em que os observadores serão notificados. Se a lógica depender de que o "Observador A" receba a notícia antes do "Observador B", o Observer sozinho não resolve o problema.
+
+  ---
+  
 ## 10. Exemplos Reais de Uso no Mercado
 ## 11. Conclusão
 ## 12. Referências Bibliográficas
