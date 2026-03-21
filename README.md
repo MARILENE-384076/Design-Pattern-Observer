@@ -253,3 +253,20 @@ Em suma, o padrão Observer não é apenas uma técnica de codificação, mas um
 
 ---
 ## 12. Referências Bibliográficas
+
+As fontes abaixo serviram de base teórica e técnica para a fundamentação e implementação deste projeto:
+
+### Livros e Literatura Base
+* **GAMMA, Erich; HELM, Richard; JOHNSON, Ralph; VLISSIDES, John.** *Design Patterns: Elements of Reusable Object-Oriented Software*. 1. ed. Boston: Addison-Wesley, 1994. (O livro clássico do "GoF" que consolidou o padrão Observer).
+* **FREEMAN, Eric; ROBSON, Elisabeth.** *Use a Cabeça! Padrões de Projetos*. 2. ed. Rio de Janeiro: Alta Books, 2023. (Abordagem prática e visual sobre a comunicação entre objetos).
+* **MARTIN, Robert C.** *Clean Architecture: A Craftsman's Guide to Software Structure and Design*. 1. ed. Prentice Hall, 2017. (Fundamentos sobre desacoplamento e limites arquiteturais).
+
+### Documentação Técnica e Frameworks
+* **MICROSOFT LEARN.** *Observer Design Pattern in .NET*. Disponível em: [https://learn.microsoft.com/en-us/dotnet/standard/design-patterns/observer-design-pattern](https://learn.microsoft.com/en-us/dotnet/standard/design-patterns/observer-design-pattern). Acesso em: 21 mar. 2026.
+* **MICROSOFT LEARN.** *WPF Data Binding Overview*. Disponível em: [https://learn.microsoft.com/en-us/dotnet/desktop/wpf/data/data-binding-overview](https://learn.microsoft.com/en-us/dotnet/desktop/wpf/data/data-binding-overview). Acesso em: 21 mar. 2026.
+* **REFACTORING GURU.** *Observer Pattern*. Disponível em: [https://refactoring.guru/design-patterns/observer](https://refactoring.guru/design-patterns/observer). Acesso em: 21 mar. 2026.
+
+### 🛠️ Ferramentas Utilizadas
+* **IDE:** JetBrains Rider / Microsoft Visual Studio 2022.
+* **Linguagem:** C# 12 (.NET 8/9).
+* **Interface:** Windows Presentation Foundation (WPF).
