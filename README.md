@@ -23,7 +23,12 @@ Este projeto apresenta a implementação de um **Monitor de Mercado Financeiro**
 O **Observer** (ou *Observador*) é um padrão de projeto **comportamental** que estabelece uma relação de dependência do tipo **um-para-muitos** entre objetos. O objetivo principal é garantir que, quando um objeto muda de estado, todos os seus dependentes sejam notificados e atualizados automaticamente de forma desacoplada.
 
 ### Funcionamento do Mecanismo
+
 O padrão funciona através de dois componentes principais que interagem por meio de abstrações (interfaces):
+
+<p style="text-align: center;">
+  <img src="./Imagens/observer.png" alt="Design Pattern Observer" style="width: 50%; display: inline-block;">
+</p>
 
 1.  **O Sujeito (Subject / Publisher):** É o detentor da informação principal ou do estado de interesse. Ele possui uma lista interna de observadores e fornece métodos para que novos interessados possam se "inscrever" (`Subscribe`) ou "cancelar a assinatura" (`Unsubscribe`) em tempo de execução.
 2.  **O Observador (Observer / Subscriber):** É o componente que deseja ser informado sobre as mudanças no Sujeito. Ele não monitora o Sujeito constantemente (evitando o gasto de processamento por *polling*); em vez disso, ele aguarda passivamente ser "chamado" pelo Sujeito através de um método de atualização.
