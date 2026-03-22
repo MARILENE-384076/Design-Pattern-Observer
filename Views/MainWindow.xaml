@@ -5,8 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FinanceiroObserver.App"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-
-    </Grid>
+        Title="Monitor de Ações" Height="450" Width="800">
+        
+        <StackPanel Margin="20">
+                <TextBlock Text="{Binding PrecoAtual}" 
+                           FontSize="24" 
+                           FontWeight="Bold"/>
+        
+                <ListBox ItemsSource="{Binding Historico}" 
+                         Height="200" 
+                         Margin="0,10,0,0"/>
+        </StackPanel>
 </Window>
