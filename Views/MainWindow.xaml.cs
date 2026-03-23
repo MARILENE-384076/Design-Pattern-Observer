@@ -1,17 +1,8 @@
-﻿using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Windows;
 using FinanceiroObserver.App.Services;
 using FinanceiroObserver.App.ViewModels;
 
-namespace FinanceiroObserver.App;
+namespace FinanceiroObserver.App.Views;
 
 public partial class MainWindow : Window
 {
@@ -19,13 +10,13 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         
-        // 1. Cria a ViewModel
+        // 1. Instancia a ViewModel
         var viewModel = new MonitorAcoesViewModel();
         
-        // 2. Conecta a ViewModel á Tela (View)
+        // 2. Conecta ao DataContext da Janela
         this.DataContext = viewModel;
        
-        // 3.Cria o motor e inscreve a ViewModel nele
+        // 3. Inicia o Motor e Inscreve a ViewModel
         var motor = new MotorMercado();
         motor.Inscrever(viewModel);
     }

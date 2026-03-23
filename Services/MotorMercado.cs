@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Timers;
 using FinanceiroObserver.App.Interfaces;
 using FinanceiroObserver.App.Models;
 
@@ -8,39 +7,40 @@ namespace FinanceiroObserver.App.Services;
 
 public class MotorMercado
 {
-    /// Cria a lista de Observadores
-    // CORREÇÃO: Faltava o '=' antes de new()
+    // Lista de inscritos (Observers)
     private readonly List<IObservadorAcoes> _observadores = new();
     
-    /// Declara o temporizador usando o nome completo para evitar conflitos (Ambiguous Reference)
+    // Especificando o Timer do System.Timers para evitar erro de "Ambiguous Reference"
     private readonly System.Timers.Timer _timer;
-    
-    /// Cria um gerador de números aleatórios para simular a variação da bolsa.
     private readonly Random _random = new();
-    
+
     public MotorMercado()
     {
-        // CORREÇÃO: Usando System.Timers.Timer explicitamente
-        _timer = new System.Timers.Timer(2000); 
+        // Configura para rodar a cada 2 segundos
+        _timer = new System.Timers.Timer(2000);
         _timer.Elapsed += (s, e) => GerarVariacao();
-        _timer.AutoReset = true; // Garante que ele continue repetindo
-        _timer.Start();
+        _timer.AutoReset = true;
+        _timer.Enabled = true;
     }
 
-    // CORREÇÃO: O nome da variável agora é exatamente '_observadores'
-    public void Inscrever(IObservadorAcoes observador) => _observadores.Add(observador);
-    
-    public void Desinscrever(IObservadorAcoes observador) => _observadores.Remove(observador);
+    public void Inscrever(IObservadorAcoes observador)
+    {
+        if (!_observadores.Contains(observador))
+            _observadores.Add(observador);
+    }
 
     private void GerarVariacao()
     {
+        // Simula variação de preço
         double novoPreco = 100 + (_random.NextDouble() * 10);
-        var acao = new Acao("PETR4", Math.Round(novoPreco, 2));
+        
+        // Criando o objeto Acao (formato compatível com a Model corrigida)
+        var acao = new Acao { Simbolo = "PETR4", Preco = novoPreco };
 
-        // Notifica todos os inscritos
-        foreach (var obs in _observadores)
+        // Notifica todos os observadores na lista
+        foreach (var observador in _observadores)
         {
-            obs.Atualizar(acao);
+            observador.Atualizar(acao);
         }
     }
 }

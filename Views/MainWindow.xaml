@@ -1,19 +1,37 @@
-﻿<Window x:Class="FinanceiroObserver.App.MainWindow"
+﻿<Window x:Class="FinanceiroObserver.App.Views.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:FinanceiroObserver.App"
-        mc:Ignorable="d"
-        Title="Monitor de Ações" Height="450" Width="800">
-        
-        <StackPanel Margin="20">
-                <TextBlock Text="{Binding PrecoAtual}" 
-                           FontSize="24" 
-                           FontWeight="Bold"/>
-        
-                <ListBox ItemsSource="{Binding Historico}" 
-                         Height="200" 
-                         Margin="0,10,0,0"/>
-        </StackPanel>
+        Title="Monitor de Mercado Pro" Height="500" Width="850"
+        Background="#F5F5F7">
+
+    <Grid Margin="25">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="White" CornerRadius="15" Padding="25" Margin="0,0,0,25">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="20" ShadowDepth="2" Opacity="0.1" Color="Black"/>
+            </Border.Effect>
+            <StackPanel HorizontalAlignment="Center">
+                <TextBlock Text="COTAÇÃO EM TEMPO REAL" Foreground="#888" FontSize="12" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,0,0,5"/>
+                <TextBlock Text="{Binding PrecoAtual}" FontSize="38" FontWeight="ExtraBold" Foreground="{Binding CorTendencia}" HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Row="1" Background="White" CornerRadius="15" Padding="15">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="15" ShadowDepth="1" Opacity="0.05" Color="Black"/>
+            </Border.Effect>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="Histórico de Variações" FontWeight="Bold" FontSize="16" Margin="10,5,0,15" Foreground="#333"/>
+                <ListBox Grid.Row="1" ItemsSource="{Binding Historico}" BorderThickness="0" Background="Transparent" FontSize="14" Foreground="#555"/>
+            </Grid>
+        </Border>
+    </Grid>
 </Window>

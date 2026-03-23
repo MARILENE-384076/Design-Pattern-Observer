@@ -1,48 +1,57 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows.Media; // Para as cores Green e Red
 using FinanceiroObserver.App.Interfaces;
 using FinanceiroObserver.App.Models;
 
 namespace FinanceiroObserver.App.ViewModels;
 
-// A ViewModel precisa "assinar" o contrato de Observador para receber os dados
 public class MonitorAcoesViewModel : IObservadorAcoes, INotifyPropertyChanged
 {
     private string _precoAtual = "Aguardando...";
-    
-    // Lista para exibir o histórico na tela (WPF usam ObservableCollection)
+    private double _ultimoPrecoValor = 0;
+    private Brush _corTendencia = Brushes.Black;
+
     public ObservableCollection<string> Historico { get; } = new();
 
-    public string PrecoAtual //tela (XAML) vai "observar".
+    public string PrecoAtual 
     {
         get => _precoAtual;
-        set
-        {
-            _precoAtual = value;
-            OnPropertyChanged(); // Avisa a tela que o preço mudou
-        }
+        set { _precoAtual = value; OnPropertyChanged(); }
     }
 
-    // Este é o método é chamado a cada 2 segundos
+    public Brush CorTendencia 
+    {
+        get => _corTendencia;
+        set { _corTendencia = value; OnPropertyChanged(); }
+    }
+
     public void Atualizar(Acao acao)
     {
-        // Como o Timer do Motor roda em outra thread.
+        // Lógica de cores baseada na variação
+        if (_ultimoPrecoValor > 0)
+        {
+            if (acao.Preco > _ultimoPrecoValor)
+                CorTendencia = Brushes.MediumSeaGreen; 
+            else if (acao.Preco < _ultimoPrecoValor)
+                CorTendencia = Brushes.IndianRed;
+        }
+
+        _ultimoPrecoValor = acao.Preco;
+
         var info = $"[{DateTime.Now:HH:mm:ss}] {acao.Simbolo}: R$ {acao.Preco:F2}";
         
-        PrecoAtual = info; 
-        
-        // Mantém apenas as últimas 10 variações no histórico
-        // O Dispatcher separa o código do timer para não travar a interface gráfica.
-        App.Current.Dispatcher.Invoke(() => {  
-            Historico.Insert(0, info); //coloca o preço novo no topo da lista
-            if (Historico.Count > 10) Historico.RemoveAt(10); //deixa os 10 últimos preços, removendo os demais.
+        // Atualiza a UI de forma segura
+        System.Windows.Application.Current.Dispatcher.Invoke(() => {
+            PrecoAtual = info; 
+            Historico.Insert(0, info); 
+            if (Historico.Count > 10) Historico.RemoveAt(10);
         });
     }
 
-    #region Implementação de INotifyPropertyChanged
-    public event PropertyChangedEventHandler? PropertyChanged; // Evento que a tela assina para saber se ouve mundanças
-    protected void OnPropertyChanged([CallerMemberName] string? name = null) //CallerMemberName - descobre sozinho qual propriedade chamou o método,
+    public event PropertyChangedEventHandler? PropertyChanged;
+    protected void OnPropertyChanged([CallerMemberName] string? name = null)
         => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-    #endregion
 }
