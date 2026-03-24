@@ -10,13 +10,9 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         
-        // 1. Instancia a ViewModel
         var viewModel = new MonitorAcoesViewModel();
-        
-        // 2. Conecta ao DataContext da Janela
         this.DataContext = viewModel;
        
-        // 3. Inicia o Motor e Inscreve a ViewModel
         var motor = new MotorMercado();
         motor.Inscrever(viewModel);
     }
