@@ -246,27 +246,27 @@ Embora robusto, o padrão introduz considerações importantes que devem ser ger
 * **Curva de Aprendizado e Sobrecarga Inicial:** Para sistemas triviais, o uso de interfaces e gerenciamento de listas pode parecer excessivo (*over-engineering*), exigindo maior esforço de design comparado a uma solução monolítica.
 * **Gestão de Memória (*Memory Leaks*):** No ambiente .NET, se um observador for instanciado e não realizar o `Unsubscribe` ao ser descartado, o Sujeito manterá uma referência viva na memória, impedindo a atuação do *Garbage Collector*.
 * **Imprevisibilidade da Ordem de Notificação:** O padrão, por definição, não estabelece uma sequência garantida para o despacho das mensagens. Se a lógica da aplicação exigir que o "Observador A" processe a informação antes do "Observador B", mecanismos adicionais de orquestração seriam necessários.
-
----
   
-## 10. Exemplos Reais de Uso no Mercado
+---
 
-O padrão **Observer** é um dos mais utilizados na indústria de software, servindo de base para arquiteturas reativas e sistemas distribuídos. Abaixo, listamos exemplos clássicos de sua aplicação no mercado real:
+## 10. Aplicações do Padrão no Mercado de Software
 
-### 10.1. Notificações Push (Mobile)
-Este é o exemplo mais comum no cotidiano. Quando um servidor de notícias (Sujeito) publica uma nova matéria, ele não sabe quais usuários estão com o celular ligado. Ele simplesmente dispara uma notificação para todos os aparelhos inscritos (Observadores). Cada aplicativo reage à sua maneira: exibindo um banner, vibrando o celular ou emitindo um som.
+O padrão **Observer** é um dos pilares da engenharia de software moderna, servindo como base para arquiteturas reativas e sistemas distribuídos de alta escala. Abaixo, listamos exemplos clássicos de sua aplicação na indústria tecnológica:
 
-### 10.2. Dashboards Financeiros e de BI
-Plataformas como **Bloomberg Terminal**, **ProfitChart** ou painéis de **Business Intelligence (Power BI)** utilizam o Observer para atualizar gráficos em tempo real. Quando o banco de dados recebe uma nova transação, todos os widgets (velas de gráfico, tabelas de volume, indicadores de média móvel) são notificados simultaneamente para redesenhar a interface.
+### 10.1. Notificações Push e Sistemas de Mensageria
+Este é o caso de uso mais difundido no ecossistema mobile. Quando um servidor de notícias ou redes sociais (Sujeito) publica novo conteúdo, ele dispara uma notificação para o barramento de serviços. Todos os dispositivos inscritos (**Observadores**) recebem o sinal e reagem conforme suas configurações: exibindo banners, emitindo alertas sonoros ou atualizando dados em segundo plano (*background fetch*).
 
-### 10.3. Frameworks de Front-end (React, Vue, Angular)
-A "mágica" desses frameworks modernos baseia-se no conceito de **Reatividade**. Quando o estado de uma variável muda, todos os componentes da página que dependem dessa variável (os Observadores) são "avisados" para se renderizarem novamente. O mecanismo de *Data Binding* do próprio **WPF** (utilizado neste projeto) é uma implementação profunda do padrão Observer.
+### 10.2. Terminais Financeiros e Dashboards de BI
+Plataformas de alta performance como **Bloomberg Terminal**, **ProfitChart** ou **Power BI** utilizam o Observer para garantir a integridade visual. Quando o fluxo de dados (*data stream*) recebe uma nova cotação, todos os componentes da interface — como gráficos de candlestick, livros de ofertas e indicadores técnicos — são notificados simultaneamente para renderizar o novo estado.
 
-### 10.4. Redes Sociais
-No **Instagram** ou **X (Twitter)**, quando você segue alguém, você está se tornando um "Assinante" (Subscriber) daquele perfil. Assim que o perfil posta um novo conteúdo (Evento), o sistema notifica todos os seguidores (Observadores) para que o feed de cada um seja atualizado com a nova publicação.
+### 10.3. Frameworks Front-end e Reatividade
+A arquitetura de frameworks como **React**, **Vue** e **Angular** baseia-se no conceito de reatividade. Quando o estado de uma aplicação muda, todos os componentes dependentes desse estado (os Observadores) são notificados para realizar a re-renderização. O próprio mecanismo de **Data Binding do WPF**, utilizado neste projeto via interface `INotifyPropertyChanged`, é uma implementação nativa e profunda do padrão Observer.
 
-### 10.5. Sistemas de Monitoramento (DevOps)
-Ferramentas como **Zabbix** ou **Grafana** monitoram a saúde de servidores. Se o uso de CPU de um servidor ultrapassa 90%, o motor de monitoramento (Sujeito) dispara alertas para diversos observadores: um canal no **Slack**, um e-mail para o administrador e um log de segurança.
+### 10.4. Redes Sociais (Modelo Seguidor/Seguido)
+Plataformas como **Instagram** e **X (Twitter)** operam sob uma lógica de "Assinatura". Ao seguir um perfil, o usuário torna-se um observador daquele objeto. No momento em que o perfil (Sujeito) publica um novo conteúdo, o sistema propaga esse evento para o feed de todos os seguidores inscritos, garantindo a entrega da informação em tempo real.
+
+### 10.5. Monitoramento de Infraestrutura (DevOps)
+Ferramentas de observabilidade como **Zabbix**, **Grafana** e **Prometheus** monitoram a saúde de servidores e clusters. Caso uma métrica crítica (como uso de CPU acima de 90%) seja atingida, o motor de monitoramento atua como Sujeito e dispara alertas para múltiplos observadores: canais no **Slack**, e-mails de suporte e sistemas de auto-scaling.
 
 ---
 ## 11. Conclusão
