@@ -167,35 +167,35 @@ A economia de processamento é vital em aplicações Desktop desenvolvidas em **
 * **Modelo Pull (Ineficiente):** Se 10 janelas distintas fizessem requisições constantes ao motor, haveria um tráfego de dados redundante e alto consumo de CPU.
 * **Modelo Push (Eficiente):** No fluxo do Observer, o processamento só é disparado quando há uma mudança real no estado do dado. Isso otimiza o uso de memória e threads, permitindo que a aplicação permaneça fluida mesmo com múltiplos ativos sendo monitorados.
 ---
-## 7. Detalhamento da Implementação Técnica
-
-Nesta seção, descrevemos como os conceitos do padrão **Observer** foram traduzidos em código funcional utilizando **C# 12**, **WPF** e a IDE **JetBrains Rider**, garantindo uma arquitetura robusta e escalável.
-
 ### 7.1. Camada de Modelo (Model)
 
-A classe **`Acao`** atua como o Objeto de Transferência de Dados (**DTO**). Sua função é transportar a informação do motor para os observadores de forma íntegra.
-* **Implementação de Imutabilidade:** Utilizamos o tipo **`record`** do C#. Esta escolha garante que os dados da ação não sejam alterados acidentalmente por um observador antes que os demais recebam a notificação, preservando a consistência do estado.
-* **Atributos:** Encapsula o `Simbolo` (identificador do ativo) e o `Preco` (valor dinâmico), servindo como o contrato de dados da aplicação.
+A classe **`Acao`** atua como o Objeto de Transferência de Dados (**DTO**). Sua função é transportar a informação do motor para os observadores de forma íntegra e simplificada.
+
+* **Implementação Técnica:** Diferente de estruturas imutáveis, a classe utiliza propriedades públicas com *getters* e *setters* automáticos e um construtor padrão. Esta abordagem facilita a manipulação dos dados e a integração direta com frameworks de serialização ou persistência.
+* **Atributos:**
+    * `Simbolo`: Um identificador do tipo `string` (ex: "PETR4") que diferencia o ativo.
+    * `Preco`: Um valor do tipo `double` que representa a cotação atualizada.
+* **Inicialização:** A classe garante a integridade inicial ao definir o `Simbolo` como uma string vazia (`string.Empty`), evitando exceções de referência nula (*NullReferenceException*) durante o ciclo de vida do objeto.
 
 ### 7.2. O Sujeito Concreto (Motor do Mercado)
 
 A classe **`MotorMercado`** detém o estado do sistema e atua como a fonte central de notificações.
 * **Gerenciamento de Assinantes:** Mantém uma `List<IObservadorAcoes>` privada. O motor interage apenas com a abstração, desconhecendo as implementações concretas (ViewModels ou Loggers) presentes na lista.
-* **Lógica de Notificação:** O método `Notificar()` percorre a coleção de inscritos e invoca o método `Atualizar()` de cada um, propagando a nova instância de `Acao`.
-* **Gatilho de Eventos:** Utiliza um `System.Timers.Timer` para simular a volatilidade financeira. A cada intervalo (*tick*), o motor gera uma variação aleatória de preço e dispara automaticamente o fluxo de notificação.
+* **Lógica de Notificação:** O método `Notificar()` percorre a coleção de inscritos e invoca o método `Atualizar()` de cada um, propagando a instância de `Acao`.
+* **Gatilho de Eventos:** Utiliza um `System.Timers.Timer` para simular a volatilidade financeira. A cada intervalo (*tick*), o motor gera uma nova variação e dispara automaticamente o fluxo de notificação.
 
 ### 7.3. A Interface do Observador (Abstração)
 
 A interface **`IObservadorAcoes`** é o componente que viabiliza o **Baixo Acoplamento** e a **Inversão de Dependência**.
 * **Definição do Contrato:** Estabelece o método padrão `void Atualizar(Acao acao)`, obrigatório para qualquer componente que deseje monitorar o motor.
-* **Extensibilidade:** Graças a essa interface, novos observadores (como um robô de investimentos ou um serviço de exportação para Excel) podem ser adicionados ao sistema sem a necessidade de modificar ou recompilar o código interno do `MotorMercado`.
+* **Extensibilidade:** Permite que novos observadores sejam acoplados ao sistema sem a necessidade de modificar o código interno do `MotorMercado`.
 
 ### 7.4. O Observador Concreto (ViewModel)
 
 A classe **`MonitorAcoesViewModel`** é responsável por processar os estímulos do motor e preparar os dados para a camada de apresentação (**View**).
 * **Auto-Inscrição:** No construtor, a ViewModel recebe a instância do motor e realiza o registro de interesse via `_motor.Inscrever(this)`.
-* **Sincronização de Threads (Dispatcher):** Como as notificações do `Timer` ocorrem em threads secundárias, a ViewModel utiliza o **`App.Current.Dispatcher`** para garantir que a atualização da interface gráfica ocorra na *UI Thread*, evitando exceções de acesso cross-thread no WPF.
-* **Reatividade via Data Binding:** Após o processamento (cálculo de tendência e histórico), a classe dispara o evento `OnPropertyChanged`, notificando o motor de vínculo do WPF para renderizar o novo valor na tela instantaneamente.  
+* **Sincronização de Threads (Dispatcher):** Como as notificações do `Timer` ocorrem em threads secundárias, a ViewModel utiliza o `Dispatcher` para garantir que a atualização da interface gráfica ocorra na *UI Thread*.
+* **Reatividade via Data Binding:** Após o processamento, a classe dispara o evento `OnPropertyChanged`, notificando o motor de vínculo do WPF para renderizar o novo valor na tela.
 ---
 ## 8. Integração MVVM e Boas Práticas
 
