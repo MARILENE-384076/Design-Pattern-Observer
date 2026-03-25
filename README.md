@@ -76,29 +76,38 @@ Em sistemas de monitoramento financeiro, é comum que diversos componentes (Grá
 * **O Problema:** Garantir a consistência visual entre múltiplos componentes de forma manual é complexo e propenso a falhas de sincronia.
 * **A Solução:** Como todos os componentes se inscrevem no mesmo **Sujeito**, o padrão assegura a **integridade e a simultaneidade da informação** em toda a aplicação no exato instante da notificação.
 ---
-## 4. Estrutura e Diagrama de Classes
+## 4. Estrutura e Arquitetura do Sistema
 
-A arquitetura deste projeto foi desenhada para separar completamente a lógica de geração de dados da lógica de exibição. Abaixo, detalhamos como o padrão **Observer** organiza as classes.
+A arquitetura deste projeto foi projetada para garantir a separação total entre a lógica de geração de dados e a camada de apresentação. A estrutura utiliza o padrão **Observer** como o mecanismo de comunicação central, integrando-se ao padrão **MVVM** (*Model-View-ViewModel*) para o ambiente WPF.
 
-<p style="text-align: center;">
-  <img src="./Imagens/Arquitetura.png" alt="Arquitetura Observer" style="width: 50%; display: inline-block;">
+### 4.1. Diagrama de Classes
+
+O diagrama abaixo ilustra a hierarquia e as relações de dependência do sistema. Observa-se que o núcleo da aplicação (Motor) interage apenas com abstrações, desconhecendo as implementações concretas das ViewModels.
+
+<p align="center">
+  <img src="./Imagens/diagrama_classe.jpg" alt="Diagrama de Classes Observer" width="80%">
 </p>
 
-### 4.1. O Diagrama de Classes
-O diagrama abaixo representa a relação de dependência entre as classes do sistema. Note que o "Motor" (Subject) não conhece as "ViewModels" (Observers) diretamente, mas sim a interface que elas implementam.
-#INSERIR DIAGRAMA AQUI!!!
+### 4.2. Descrição dos Componentes e Relacionamentos
 
-### 4.2. Fluxo de Relacionamento
-1.  **Associação de Composição:** O `MotorMercado` possui uma `List<IObservadorAcoes>`. Isso permite que ele armazene múltiplos interessados sem saber de que tipo eles são (se são telas, logs ou serviços de e-mail).
-2.  **Realização de Interface:** A classe `MonitorAcoesViewModel` realiza (implementa) a interface `IObservadorAcoes`. Isso garante que ela possua o método `Atualizar()`, que será chamado pelo motor.
-3.  **Dependência de Dados:** Tanto o Sujeito quanto o Observador dependem da classe de modelo `Acao`, que serve como o "pacote" de dados trafegado durante a notificação.
+Com base na modelagem apresentada, a estrutura divide-se em:
 
-### 4.3. Dinâmica de Execução (Diagrama de Sequência)
-O funcionamento ocorre em três etapas principais:
-* **Inscrição:** Ao iniciar a aplicação, a `ViewModel` chama o método `Motor.Inscrever(this)`.
-* **Mudança de Estado:** O `MotorMercado` altera o preço de uma ação (via Timer).
-* **Notificação:** O Motor percorre sua lista interna e executa o método `Atualizar(acao)` de cada observador inscrito.
-  # INSERIR DIAGRAMA AQUI!
+1.  **Sujeito (MotorMercado):** Atua como o provedor de informações. Ele mantém uma `List<IObservadorAcoes>` e utiliza um `Timer` para simular variações de mercado. O método `Inscrever()` permite o registro dinâmico de novos interessados.
+2.  **Abstração (IObservadorAcoes):** Interface que define o contrato de comunicação. Qualquer classe que deseje reagir a mudanças no mercado deve implementar o método `Atualizar(Acao acao)`.
+3.  **Observador Concreto (MonitorAcoesViewModel):** Implementa a interface de observação. Ao receber a notificação, ela atualiza suas propriedades (`PrecoAtual`, `Historico`) e dispara o evento `OnPropertyChanged`, notificando a **MainWindow** (View) via *Data Binding*.
+4.  **Modelo de Dados (Acao):** Objeto de transporte que encapsula as informações de símbolo e preço, servindo como o contrato de dados entre o Sujeito e o Observador.
+
+### 4.3. Dinâmica de Execução e Fluxo de Dados
+
+O funcionamento operacional do sistema segue um ciclo reativo dividido em três etapas:
+
+* **Registro (Inscrição):** Durante a inicialização, a `MonitorAcoesViewModel` solicita sua inclusão na lista de observadores do `MotorMercado` através do método `Inscrever(this)`.
+* **Processamento de Estado:** O `MotorMercado`, de forma assíncrona (via `Timer`), gera novas variações de preço para os ativos financeiros.
+* **Notificação (Push):** Ao detectar uma nova variação, o Motor percorre sua lista interna de observadores e invoca o método `Atualizar(acao)`. A ViewModel, ao ser acionada, processa o dado e atualiza a interface gráfica em tempo real.
+
+<p align="center">
+  <img src="./Imagens/diagrama_sequencia.png" alt="Diagrama de Sequência" width="60%">
+</p>
 ---
 ## 5. Participantes do Padrão
 
