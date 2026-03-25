@@ -78,6 +78,10 @@ Em sistemas de monitoramento financeiro, é comum que diversos componentes (Grá
 ---
 ## 4. Estrutura e Arquitetura do Sistema
 
+<p align="center">
+  <img src="./Imagens/Arquitetura.png" alt="Diagrama de Classes Observer" width="80%">
+</p>
+
 A arquitetura deste projeto foi projetada para garantir a separação total entre a lógica de geração de dados e a camada de apresentação. A estrutura utiliza o padrão **Observer** como o mecanismo de comunicação central, integrando-se ao padrão **MVVM** (*Model-View-ViewModel*) para o ambiente WPF.
 
 ### 4.1. Diagrama de Classes
