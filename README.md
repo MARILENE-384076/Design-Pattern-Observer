@@ -115,28 +115,27 @@ O funcionamento operacional do sistema segue um ciclo reativo dividido em três 
 ---
 ## 5. Participantes do Padrão
 
-O padrão Observer define quatro participantes principais que colaboram para realizar o desacoplamento do sistema. Abaixo, detalhamos cada um deles e como eles se traduzem no projeto de **Monitoramento de Ações**:
+O padrão **Observer** define quatro participantes principais que colaboram para viabilizar o desacoplamento do sistema. Abaixo, detalhamos cada um desses papéis e como eles foram implementados no projeto de **Monitoramento de Mercado Financeiro**:
 
 ### 1. Sujeito (Subject / Publisher)
-* **Papel:** É o objeto que detém o estado de interesse (os preços das ações) e mantém a lista de observadores.
-* **Responsabilidades:** Fornecer uma interface para anexar (`Subscribe`) e desanexar (`Unsubscribe`) observadores, além de percorrer a lista para enviar notificações.
-* **No Projeto:** É a classe `MotorMercado`.
+* **Papel:** É o objeto central que detém o estado de interesse (os preços das ações) e gerencia a lista de dependentes.
+* **Responsabilidades:** Disponibilizar métodos para anexar (`Subscribe`) e desanexar (`Unsubscribe`) observadores, além de iterar sobre a lista para disparar as notificações de mudança.
+* **No Projeto:** Representado pela classe **`MotorMercado`**, que centraliza a lógica de variação dos ativos.
 
 ### 2. Interface do Observador (Observer / Subscriber)
-* **Papel:** Define o contrato de atualização para os objetos que devem ser notificados pelo Sujeito.
-* **Responsabilidades:** Declarar o método de notificação (geralmente chamado de `Update` ou `Atualizar`) que o Sujeito utilizará para passar as informações.
-* **No Projeto:** É a interface `IObservadorAcoes`.
+* **Papel:** Define o contrato de comunicação técnica entre o Sujeito e seus dependentes.
+* **Responsabilidades:** Declarar o método de notificação padronizado (neste caso, `Atualizar`) que o Sujeito invocará para transmitir os dados.
+* **No Projeto:** Representada pela interface **`IObservadorAcoes`**, garantindo que qualquer componente (seja UI ou Log) possa ouvir o motor.
 
 ### 3. Observador Concreto (Concrete Observer)
-* **Papel:** Mantém uma referência ao Sujeito e implementa a interface do Observador para manter seu estado sincronizado com o do Sujeito.
-* **Responsabilidades:** Implementar a lógica de reação ao receber um dado (ex: atualizar um gráfico ou uma propriedade na tela).
-* **No Projeto:** É a classe `MonitorAcoesViewModel`.
+* **Papel:** Componente que implementa a interface do observador para reagir aos estímulos do Sujeito.
+* **Responsabilidades:** Implementar a lógica de negócio específica ao receber um novo dado, mantendo o estado da interface ou do serviço sincronizado com o motor.
+* **No Projeto:** Representado pela classe **`MonitorAcoesViewModel`**, que processa a atualização e notifica a View via *Data Binding*.
 
 ### 4. Objeto de Dados / Estado (Concrete State)
-* **Papel:** Representa a informação que está sendo transmitida do Sujeito para os Observadores.
-* **Responsabilidades:** Carregar os valores alterados (Símbolo da ação, Preço, Variação) de forma íntegra.
-* **No Projeto:** É a classe (ou record) `Acao`.
-  
+* **Papel:** Encapsula a informação que está sendo trafegada entre o Sujeito e os Observadores.
+* **Responsabilidades:** Carregar os valores alterados (Símbolo, Preço e Tendência) de forma íntegra e imutável durante o transporte.
+* **No Projeto:** Representado pela classe **`Acao`**, que atua como o *Data Transfer Object* (DTO) da notificação.
 ---
 ## 6. Justificativa da Escolha do Contexto (Mercado Financeiro)
 
