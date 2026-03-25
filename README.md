@@ -139,26 +139,33 @@ O padrão **Observer** define quatro participantes principais que colaboram para
 ---
 ## 6. Justificativa da Escolha do Contexto (Mercado Financeiro)
 
-A escolha do **Mercado Financeiro** como cenário para este projeto não foi arbitrária; ela baseia-se na natureza intrínseca dos dados financeiros, que exigem alta reatividade e integridade. Abaixo, detalhamos os motivos técnicos que tornam este contexto o "caso de uso perfeito" para o padrão Observer:
+A seleção do **Mercado Financeiro** como cenário para este projeto fundamenta-se na natureza intrínseca dos dados econômicos, que exigem alta reatividade, integridade e consistência. Abaixo, detalhamos os motivos técnicos que tornam este contexto o "caso de uso ideal" para a aplicação do padrão **Observer**:
 
-### 6.1. Natureza Crítica do Tempo (Real-Time)
-No mercado de ações, a informação perde valor rapidamente. Um atraso de poucos segundos na atualização de um preço pode resultar em decisões erradas. O padrão Observer permite que o sistema seja **reativo**: em vez de a interface "perguntar" ao banco de dados se o preço mudou (o que seria lento e custoso), o motor de dados "empurra" a informação no exato milissegundo em que ela é alterada.
+### 6.1. Reatividade em Tempo Real (Low Latency)
 
-### 6.2. Necessidade de Múltiplas Visualizações
-Em um terminal financeiro real, um único dado (ex: o preço da PETR4) precisa atualizar simultaneamente:
-1. Um **Gráfico de Candlestick** (visual).
-2. Uma **Grade de Cotações** (tabela).
-3. Um **Sistema de Alertas** (notificação de preço alto/baixo).
-4. Um **Log de Transações** (histórico).
+No mercado de capitais, a informação possui uma janela de utilidade extremamente curta. Um atraso de milissegundos na atualização de uma cotação pode comprometer a tomada de decisão. 
+* **O Diferencial:** O padrão Observer viabiliza um sistema **reativo**. Em vez de a interface realizar consultas periódicas ao banco de dados (gerando latência), o motor de dados "empurra" (*push*) a informação no exato instante da volatilidade, garantindo que o usuário visualize o estado mais atual do ativo.
 
-O Observer resolve isso perfeitamente, pois o motor (Sujeito) apenas emite o dado uma vez, e todos esses componentes (Observadores) reagem de forma independente.
+### 6.2. Orquestração de Múltiplas Visualizações
 
-### 6.3. Escalabilidade e Desacoplamento
-Sistemas financeiros são modulares. Hoje o sistema tem uma grade de preços; amanhã pode precisar de um robô de investimentos (*Trading Bot*). Com o Observer, podemos adicionar esse robô como um novo "Assinante" sem precisar alterar uma única linha de código do Motor de Mercado. Isso respeita o **Princípio Aberto/Fechado (OCD)** do SOLID.
+Em um terminal financeiro profissional, um único evento (ex: a variação de preço da PETR4) deve disparar atualizações simultâneas em diversos componentes:
+1. **Gráficos de Tendência:** Para análise técnica visual.
+2. **Grades de Cotação:** Para monitoramento tabular de preços.
+3. **Motores de Alerta:** Para notificações de limites de preço (Stop Loss/Gain).
+4. **Logs de Auditoria:** Para registro histórico de transações.
 
-### 6.4. Eficiência de Recursos (Push vs. Pull)
-Se tivéssemos 10 janelas abertas e cada uma fizesse uma requisição por segundo ao motor (modelo *Pull*), teríamos um tráfego desnecessário. No modelo do Observer (*Push*), o tráfego só acontece quando há uma mudança real no dado, economizando processamento e memória, o que é vital para aplicações desktop em C#/WPF.
+O Observer soluciona essa complexidade de forma elegante: o **Sujeito** emite a notificação uma única vez, e todos os **Observadores** reagem de maneira independente e paralela.
 
+### 6.3. Escalabilidade e o Princípio Aberto/Fechado (OCP)
+
+Sistemas financeiros são modulares e evolutivos. Uma aplicação que hoje monitora preços pode, futuramente, precisar de um módulo de *Machine Learning* para predição ou um robô de investimentos (*Trading Bot*). 
+* **A Vantagem:** Com o Observer, novos módulos podem ser acoplados como novos "Assinantes" sem a necessidade de alterar ou recompilar o núcleo do **Motor de Mercado**. Isso respeita o **Princípio Aberto/Fechado** do SOLID, permitindo que o sistema cresça sem comprometer a estabilidade do código existente.
+
+### 6.4. Eficiência de Recursos Computacionais
+
+A economia de processamento é vital em aplicações Desktop desenvolvidas em **C#/WPF**.
+* **Modelo Pull (Ineficiente):** Se 10 janelas distintas fizessem requisições constantes ao motor, haveria um tráfego de dados redundante e alto consumo de CPU.
+* **Modelo Push (Eficiente):** No fluxo do Observer, o processamento só é disparado quando há uma mudança real no estado do dado. Isso otimiza o uso de memória e threads, permitindo que a aplicação permaneça fluida mesmo com múltiplos ativos sendo monitorados.
 ---
 
 ## 7. Explicação da Implementação no Projeto
