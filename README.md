@@ -218,32 +218,36 @@ A ViewModel, ao atuar como um **Observador Concreto**, recebe o objeto `Acao` e 
 Uma boa prática implementada é garantir o descarte correto. Quando uma janela de monitoramento é fechada, a ViewModel invoca o método de **cancelamento de assinatura** no Sujeito. Isso evita o vazamento de memória (*Memory Leak*), impedindo que o motor continue tentando notificar um objeto que não deveria mais existir na memória.
 
 ---
-## 9. Análise Crítica
+## 9. Análise Crítica e Resultados
 
-A aplicação do padrão Observer no Monitor de Mercado Financeiro permite uma avaliação sobre a viabilidade e o impacto da arquitetura no ciclo de vida do software. Abaixo, detalhamos os pontos observados durante o desenvolvimento:
+A aplicação do padrão **Observer** no Monitor de Mercado Financeiro permite uma avaliação profunda sobre o impacto da arquitetura no ciclo de vida do software. Abaixo, detalhamos os pontos observados durante o desenvolvimento e os resultados obtidos:
 
-### 9.1. Comparação: Com Padrão vs. Sem Padrão
+### 9.1. Matriz Comparativa: Arquitetura Tradicional vs. Observer
+
+A tabela abaixo resume as principais diferenças observadas entre uma implementação de acoplamento direto e a solução proposta com o padrão:
 
 | Característica | Sem o Padrão Observer | Com o Padrão Observer |
 | :--- | :--- | :--- |
-| **Acoplamento** | **Rígido:** O Motor de Mercado precisaria ter uma referência direta para cada janela (View) ou ViewModel. | **Fraco:** O Motor conhece apenas uma Interface (`IObservadorAcoes`). |
-| **Escalabilidade** | **Difícil:** Para adicionar um novo gráfico, seria necessário alterar e recompilar o código do Motor. | **Fácil:** Basta criar uma nova classe que implemente a interface e "assinar" o motor. |
-| **Manutenção** | **Arriscada:** Mudanças na interface gráfica poderiam quebrar a lógica de negócio do motor. | **Segura:** As camadas são independentes; a lógica de negócio está protegida da UI. |
-| **Fluxo de Dados** | **Pull (Busca):** A UI precisa perguntar ao motor se o dado mudou (desperdício de CPU). | **Push (Envio):** O motor envia o dado no exato momento da mudança (eficiência). |
+| **Acoplamento** | **Rígido:** O Motor de Mercado exige referência direta para cada View ou ViewModel. | **Fraco (Loose):** O Motor interage apenas com a abstração `IObservadorAcoes`. |
+| **Escalabilidade** | **Complexa:** Adicionar novos componentes exige alteração e recompilação do núcleo. | **Simples:** Basta criar uma classe que implemente a interface e realizar a inscrição. |
+| **Manutenção** | **Arriscada:** Mudanças na UI podem impactar a estabilidade da lógica de negócio. | **Segura:** As camadas são independentes; o motor é isolado das alterações de design. |
+| **Eficiência** | **Pull (Busca):** A UI consome recursos consultando o motor constantemente. | **Push (Envio):** O motor despacha o dado somente no instante da alteração real. |
 
-### 9.2. Vantagens Observadas
+### 9.2. Vantagens Observadas na Prática
 
-* **Extensibilidade (OCP):** Durante o desenvolvimento, ficou claro que poderíamos adicionar um sistema de "Log de Arquivo" ou um "Alerta Sonoro" como novos observadores sem tocar em uma linha de código do `MotorMercado`.
-* **Reatividade Instantânea:** A percepção de atualização na interface WPF é imediata, essencial para o contexto financeiro onde milissegundos importam.
-* **Código Limpo:** A separação de responsabilidades facilitou a leitura do código, deixando claro onde termina a regra de negócio e onde começa a lógica de exibição.
+* **Respeito ao OCP (Open-Closed Principle):** Durante a codificação, confirmou-se a facilidade de acoplar novos "assinantes" (como um serviço de log ou alertas sonoros) sem violar ou modificar o código-fonte estável do `MotorMercado`.
+* **Reatividade e Performance:** A percepção de atualização na interface **WPF** é instantânea. O modelo de notificação via *Push* provou-se ideal para o contexto financeiro, onde a latência mínima é um requisito de negócio.
+* **Separation of Concerns (SoC):** A clara distinção entre a regra de negócio (geração de preços) e a lógica de apresentação (formatação de cores e histórico) resultou em um código mais limpo e legível.
 
-### 9.3. Desvantagens e Limitações
+### 9.3. Desafios e Limitações Identificadas
 
-* **Complexidade Inicial:** Para um projeto simples, o Observer introduz mais classes e interfaces do que uma solução direta, o que exige maior esforço inicial de design.
-* **Risco de Memory Leaks:** Se o desenvolvedor esquecer de chamar o método de "cancelamento de assinatura" (`Unsubscribe`) ao fechar uma janela, o motor continuará mantendo uma referência para um objeto que deveria ter sido destruído, impedindo a limpeza pelo *Garbage Collector*.
-* **Ordem de Notificação:** O padrão não garante a ordem em que os observadores serão notificados. Se a lógica depender de que o "Observador A" receba a notícia antes do "Observador B", o Observer sozinho não resolve o problema.
+Embora robusto, o padrão introduz considerações importantes que devem ser gerenciadas:
 
-  ---
+* **Curva de Aprendizado e Sobrecarga Inicial:** Para sistemas triviais, o uso de interfaces e gerenciamento de listas pode parecer excessivo (*over-engineering*), exigindo maior esforço de design comparado a uma solução monolítica.
+* **Gestão de Memória (*Memory Leaks*):** No ambiente .NET, se um observador for instanciado e não realizar o `Unsubscribe` ao ser descartado, o Sujeito manterá uma referência viva na memória, impedindo a atuação do *Garbage Collector*.
+* **Imprevisibilidade da Ordem de Notificação:** O padrão, por definição, não estabelece uma sequência garantida para o despacho das mensagens. Se a lógica da aplicação exigir que o "Observador A" processe a informação antes do "Observador B", mecanismos adicionais de orquestração seriam necessários.
+
+---
   
 ## 10. Exemplos Reais de Uso no Mercado
 
