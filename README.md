@@ -103,15 +103,15 @@ Com base na modelagem apresentada, a estrutura divide-se em:
 
 ### 4.3. Dinâmica de Execução e Fluxo de Dados
 
-O funcionamento operacional do sistema segue um ciclo reativo dividido em três etapas:
-
-* **Registro (Inscrição):** Durante a inicialização, a `MonitorAcoesViewModel` solicita sua inclusão na lista de observadores do `MotorMercado` através do método `Inscrever(this)`.
-* **Processamento de Estado:** O `MotorMercado`, de forma assíncrona (via `Timer`), gera novas variações de preço para os ativos financeiros.
-* **Notificação (Push):** Ao detectar uma nova variação, o Motor percorre sua lista interna de observadores e invoca o método `Atualizar(acao)`. A ViewModel, ao ser acionada, processa o dado e atualiza a interface gráfica em tempo real.
+O funcionamento operacional do sistema segue um ciclo reativo dividido em três etapas fundamentais, conforme ilustrado no diagrama de sequência abaixo:
 
 <p align="center">
-  <img src="./Imagens/diagrama_sequencia.png" alt="Diagrama de Sequência" width="60%">
+  <img src="./Imagens/diagrama%20de%20sequencia.png" alt="Diagrama de Sequência Observer" width="800">
 </p>
+
+1. **Registro (Inscrição):** Durante a inicialização, a `MainWindow` instancia a `ViewModel` e o `MotorMercado`. A `MonitorAcoesViewModel` solicita sua inclusão na lista de observadores do motor através do método `Inscrever(vm)`.
+2. **Processamento de Estado:** O `MotorMercado`, operando de forma assíncrona via `Timer`, dispara o método `GerarVariacao()`. Este processo cria uma nova instância da classe `Acao` com os dados atualizados de símbolo e preço.
+3. **Notificação (Push):** Ao detectar a variação, o Motor percorre sua lista interna de observadores e invoca o método `Atualizar(acao)` da interface `IObservadorAcoes`. A `ViewModel`, ao ser acionada, executa sua lógica interna (atualiza preço, define cor de tendência e adiciona ao histórico) e dispara o `OnPropertyChanged()` para atualizar a View via Data Binding.
 ---
 ## 5. Participantes do Padrão
 
