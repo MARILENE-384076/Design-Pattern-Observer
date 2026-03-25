@@ -46,33 +46,35 @@ Para a viabilização deste padrão, define-se um contrato (Interface) que padro
 
 > **`Atualizar(dados)`**: Este método atua como o ponto de entrada da notificação. Ao detectar uma mudança, o Sujeito percorre sua lista de inscritos e dispara este método para cada um deles, transmitindo o novo estado como parâmetro.
 ---
-
 ## 3. Problema que Resolve
 
-A implementação do padrão **Observer** neste projeto visa resolver três gargalos críticos no desenvolvimento de sistemas orientados a objetos: o **Acoplamento Rígido**, a **Ineficiência de Processamento (Polling)** e a **Inconsistência de Dados**.
+A implementação do padrão **Observer** neste projeto visa mitigar três gargalos críticos no desenvolvimento de sistemas orientados a objetos: o **Acoplamento Rígido**, a **Ineficiência de Processamento (Polling)** e a **Violabilidade de Princípios de Design**.
 
 ### 3.1. Acoplamento Rígido (Dependência Direta)
-Sem o padrão Observer, para que o motor financeiro atualizasse a interface, ele precisaria ter uma referência direta à classe da View (`MainWindow`).
-* **O Problema:** Isso cria uma dependência onde o "coração" do sistema (lógica de mercado) precisa conhecer detalhes da "casca" (interface). Se desejarmos adicionar um novo serviço de Log ou um alerta via SMS, seríamos obrigados a alterar o código interno do motor.
-* **A Solução:** O Observer permite que o motor interaja apenas com uma **Interface (`IObservadorAcoes`)**. O motor não sabe *quem* está ouvindo, apenas que eles sabem processar a atualização.
 
-### 3.2. Polling vs. Push (Desperdício de Recursos)
+Sem a aplicação do padrão, o motor financeiro (lógica de negócio) exigiria uma referência direta à classe da interface gráfica (`MainWindow`) para disparar atualizações.
+* **O Problema:** Esta abordagem cria uma dependência cíclica ou rígida, onde o núcleo do sistema precisa conhecer detalhes da camada de apresentação. Caso fosse necessário adicionar um novo serviço de log ou um sistema de alertas via SMS, o código interno do motor precisaria ser modificado, violando a extensibilidade.
+* **A Solução:** O Observer permite que o motor interaja estritamente com uma **Interface (`IObservadorAcoes`)**. O motor desconhece a identidade dos ouvintes, sabendo apenas que eles são capazes de processar a notificação recebida.
 
-<p style="text-align: center;">
-  <img src="./Imagens/polling.png" alt="Ineficiencia de Processamento Polling" style="width: 50%; display: inline-block;">
+### 3.2. Polling vs. Push (Otimização de Recursos)
+
+<p align="center">
+  <img src="./Imagens/polling.png" alt="Comparativo Polling vs Push" width="50%">
 </p>
 
-* **Abordagem Ineficiente (Polling):** A interface gráfica precisaria de um loop constante perguntando ao motor: *"O preço mudou?"*. Na maioria das verificações, a resposta seria negativa, resultando em desperdício de CPU e memória.
-* **Abordagem Reativa (Push):** Com o Observer, a interface fica em estado de espera (dormente). O motor assume a responsabilidade de "empurrar" (*push*) a informação apenas quando ocorre uma mudança real. Isso economiza recursos computacionais e simplifica o fluxo de execução.
+* **Abordagem Ineficiente (Polling):** A interface gráfica executaria um laço de repetição constante consultando o motor: *"O preço mudou?"*. Na maioria das iterações, a resposta seria negativa, resultando em desperdício de ciclos de CPU e memória.
+* **Abordagem Reativa (Push):** Com o Observer, a interface permanece em estado de espera. O motor assume a responsabilidade de "empurrar" (*push*) a informação somente quando ocorre uma alteração real no estado. Esta inversão economiza recursos computacionais e simplifica o fluxo de execução.
 
 ### 3.3. Violação do Princípio de Responsabilidade Única (SRP)
-* **O Problema:** Sem o padrão, o `MotorMercado` acabaria acumulando responsabilidades que não são dele, como gerenciar instâncias de UI, formatar strings para exibição ou gerenciar conexões de log.
-* **A Solução:** O motor foca exclusivamente em sua regra de negócio: **gerar e processar variações de mercado**. A responsabilidade de como essa informação será exibida ou armazenada fica a cargo de cada observador concreto, mantendo o código limpo e modular.
+
+* **O Problema:** Sem o padrão, a classe `MotorMercado` acabaria acumulando responsabilidades alheias ao seu propósito, como gerenciar instâncias de UI, formatar strings para exibição ou controlar conexões de persistência.
+* **A Solução:** O motor foca exclusivamente em sua regra de negócio: **processar variações de mercado**. A responsabilidade sobre como essa informação será renderizada ou armazenada é delegada aos observadores concretos, mantendo o código modular e limpo.
 
 ### 3.4. Sincronização de Múltiplos Interessados
-Em sistemas de monitoramento, é comum ter vários componentes (Gráficos, Grids de Preço, Alertas de Limite) dependendo do mesmo dado.
-* **O Problema:** Garantir que todos esses componentes mostrem o mesmo valor simultaneamente é complexo sem um despacho centralizado.
-* **A Solução:** Como todos os componentes se inscrevem no mesmo "Sujeito", o padrão garante a **integridade e sincronia da informação** em toda a aplicação no exato momento da notificação.
+
+Em sistemas de monitoramento financeiro, é comum que diversos componentes (Gráficos, Grids de Cotação, Alertas de Limite) dependam do mesmo fluxo de dados.
+* **O Problema:** Garantir a consistência visual entre múltiplos componentes de forma manual é complexo e propenso a falhas de sincronia.
+* **A Solução:** Como todos os componentes se inscrevem no mesmo **Sujeito**, o padrão assegura a **integridade e a simultaneidade da informação** em toda a aplicação no exato instante da notificação.
 ---
 ## 4. Estrutura e Diagrama de Classes
 
