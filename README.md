@@ -269,16 +269,18 @@ Plataformas como **Instagram** e **X (Twitter)** operam sob uma lógica de "Assi
 Ferramentas de observabilidade como **Zabbix**, **Grafana** e **Prometheus** monitoram a saúde de servidores e clusters. Caso uma métrica crítica (como uso de CPU acima de 90%) seja atingida, o motor de monitoramento atua como Sujeito e dispara alertas para múltiplos observadores: canais no **Slack**, e-mails de suporte e sistemas de auto-scaling.
 
 ---
+
 ## 11. Conclusão
 
-A realização deste projeto permitiu uma compreensão profunda de como padrões de projeto comportamentais, especificamente o **Observer**, são fundamentais para a criação de sistemas reativos e de alta performance. Através da implementação de um **Monitor de Mercado Financeiro**, foi possível observar na prática a transição de um sistema acoplado para uma arquitetura modular e escalável.
+A realização deste projeto proporcionou uma compreensão profunda sobre como os padrões de projeto comportamentais, especificamente o **Observer**, são fundamentais para a arquitetura de sistemas reativos e de alta performance. Através da implementação do **Monitor de Mercado Financeiro**, foi possível validar na prática a transição de um sistema de acoplamento rígido para uma estrutura modular, resiliente e escalável.
 
-### Principais Aprendizados:
-* **Desacoplamento Efetivo:** A utilização de interfaces (`IObservadorAcoes`) provou que o motor de dados não precisa conhecer os detalhes da interface gráfica para funcionar, o que facilita a manutenção a longo prazo.
-* **Poder da Reatividade:** No contexto de WPF e MVVM, o padrão Observer, aliado ao `Dispatcher`, demonstrou ser a solução ideal para lidar com atualizações em tempo real vindas de threads secundárias sem comprometer a experiência do usuário.
-* **Qualidade de Software:** A aplicação dos princípios **SOLID** durante o desenvolvimento não apenas organizou o código, mas também preparou a aplicação para futuras expansões, como a adição de novos tipos de análise técnica ou bots de negociação.
+### Principais Aprendizados e Contribuições:
 
-Em suma, o padrão Observer não é apenas uma técnica de codificação, mas uma mentalidade de design que prioriza a flexibilidade e a eficiência. Este projeto consolida o conhecimento necessário para enfrentar desafios reais de engenharia de software, onde a distribuição de informação precisa e oportuna é o diferencial entre um sistema funcional e uma aplicação de sucesso.
+* **Desacoplamento de Camadas:** A utilização estratégica de interfaces (`IObservadorAcoes`) provou que o núcleo de processamento de dados não precisa conhecer os detalhes da camada de apresentação para operar. Esta independência reduz drasticamente a fragilidade do código e facilita manutenções evolutivas.
+* **Eficiência e Reatividade:** No ecossistema **.NET (WPF/MVVM)**, o padrão Observer, aliado ao uso correto do `Dispatcher`, demonstrou ser a solução definitiva para gerenciar fluxos de dados em tempo real provenientes de threads assíncronas, garantindo uma interface fluida e livre de travamentos.
+* **Consolidação de Princípios SOLID:** A aplicação prática do padrão não apenas organizou a lógica do sistema, mas reforçou a importância do **Princípio Aberto/Fechado (OCP)** e da **Inversão de Dependência (DIP)**, preparando a aplicação para expansões futuras, como a integração de motores de *Machine Learning* ou robôs de negociação automática.
+
+Em suma, o padrão **Observer** transcende a simples técnica de codificação, representando uma mentalidade de design que prioriza a flexibilidade e a eficiência. Este projeto consolida o conhecimento necessário para enfrentar desafios reais de engenharia de software, onde a distribuição de informação precisa e oportuna define o sucesso de uma aplicação crítica.
 
 ---
 ## 12. Referências Bibliográficas
