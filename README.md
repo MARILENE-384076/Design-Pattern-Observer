@@ -9,40 +9,42 @@
 ---
 ## 1. Introdução
 
-A constante necessidade de **sincronização de dados** em sistemas complexos é um dos maiores desafios da engenharia de software moderna. Em aplicações onde múltiplos componentes precisam reagir a mudanças de estado de um único objeto central, o **acoplamento rígido** entre essas partes pode tornar o código frágil, difícil de testar e quase impossível de expandir.
+No cenário atual da engenharia de software, a **sincronização de estados** entre componentes distintos representa um desafio crítico, especialmente em sistemas que exigem alta disponibilidade e processamento de dados em tempo real. O desenvolvimento de arquiteturas baseadas em **acoplamento rígido** frequentemente resulta em sistemas inflexíveis, onde alterações em um módulo central desencadeiam efeitos colaterais em toda a aplicação, dificultando a manutenção e a escalabilidade.
 
-Este projeto apresenta a implementação de um **Monitor de Mercado Financeiro** desenvolvido em **C#** com interface **WPF** (*Windows Presentation Foundation*). 
+Este trabalho propõe a implementação de um **Monitor de Mercado Financeiro**, desenvolvido na linguagem **C#** com o framework **WPF** (*Windows Presentation Foundation*). A solução foca na aplicação prática de padrões de projeto para gerenciar fluxos de dados dinâmicos de maneira eficiente e organizada.
 
-### Objetivos Principais:
-* **Demonstração Prática:** Aplicar o padrão de projeto **Observer** para resolver a distribuição de informações em tempo real.
-* **Arquitetura Desacoplada:** Utilizar o padrão **MVVM** (*Model-View-ViewModel*) para garantir que o motor de dados (**Sujeito**) notifique diversas interfaces e serviços (**Observadores**) de forma assíncrona.
-* **Independência de Camadas:** Manter a lógica de negócio totalmente independente da interface gráfica, facilitando a manutenção e a escalabilidade do sistema.
+### Objetivos do Projeto
+
+* **Implementação do Padrão Observer:** Demonstrar como a utilização deste padrão comportamental permite que um objeto central (**Sujeito**) notifique automaticamente múltiplos dependentes (**Observadores**) sobre mudanças de estado, eliminando a necessidade de verificações manuais constantes (*polling*).
+* **Adoção do Padrão MVVM:** Integrar o padrão *Model-View-ViewModel* para estruturar a aplicação, garantindo que a lógica de negócio e o motor de dados permaneçam isolados da camada de apresentação.
+* **Desacoplamento e Escalabilidade:** Estabelecer uma arquitetura onde novos serviços ou interfaces possam ser acoplados ao sistema sem a necessidade de modificar o código-fonte do núcleo de dados, promovendo a independência entre as camadas.
 ---
 ## 2. Definição do Padrão
 
-O **Observer** (ou *Observador*) é um padrão de projeto **comportamental** que estabelece uma relação de dependência do tipo **um-para-muitos** entre objetos. O objetivo principal é garantir que, quando um objeto muda de estado, todos os seus dependentes sejam notificados e atualizados automaticamente de forma desacoplada.
+O **Observer** (ou Observador) é um padrão de projeto **comportamental** que estabelece uma relação de dependência do tipo **um-para-muitos** entre objetos. O propósito central é garantir que, sempre que um objeto principal sofrer uma alteração de estado, todos os seus dependentes sejam notificados e atualizados automaticamente de forma desacoplada.
 
 ### Funcionamento do Mecanismo
 
-O padrão funciona através de dois componentes principais que interagem por meio de abstrações (interfaces):
+O padrão é estruturado através de dois componentes fundamentais que interagem por meio de abstrações (interfaces):
 
-<p style="text-align: center;">
-  <img src="./Imagens/observer.png" alt="Design Pattern Observer" style="width: 50%; display: inline-block;">
+<p align="center">
+  <img src="./Imagens/observer.png" alt="Design Pattern Observer" width="500">
 </p>
 
-1.  **O Sujeito (Subject / Publisher):** É o detentor da informação principal ou do estado de interesse. Ele possui uma lista interna de observadores e fornece métodos para que novos interessados possam se "inscrever" (`Subscribe`) ou "cancelar a assinatura" (`Unsubscribe`) em tempo de execução.
-2.  **O Observador (Observer / Subscriber):** É o componente que deseja ser informado sobre as mudanças no Sujeito. Ele não monitora o Sujeito constantemente (evitando o gasto de processamento por *polling*); em vez disso, ele aguarda passivamente ser "chamado" pelo Sujeito através de um método de atualização.
+1. **O Sujeito (Subject / Publisher):** Atua como o detentor do estado de interesse. Ele gerencia uma lista interna de observadores e disponibiliza métodos para que novos componentes possam se "inscrever" (`Subscribe`) ou "cancelar a assinatura" (`Unsubscribe`) dinamicamente em tempo de execução.
+2. **O Observador (Observer / Subscriber):** Representa o componente que consome as atualizações. Em vez de monitorar o Sujeito ativamente (eliminando o consumo de recursos por *polling*), ele permanece em estado passivo até ser invocado pelo Sujeito através de um método de atualização.
 
 ### Pilares Teóricos do Padrão
 
-* **Acoplamento Fraco (*Loose Coupling*):** O Sujeito não precisa conhecer as classes concretas dos observadores (se é uma tela WPF, um log de texto ou um serviço de e-mail). Ele interage apenas com uma **Interface**, o que permite que o sistema cresça sem que as partes dependam intimamente umas das outras.
-* **Inversão de Controle:** Em vez de a interface gráfica perguntar ao motor de dados "o preço mudou?", o motor de dados é quem empurra a informação para a interface no momento exato da alteração.
-* **Comunicação *Broadcast*:** A notificação é enviada para todos os assinantes simultaneamente. O Sujeito não se preocupa com o que cada observador fará com a informação recebida; sua única responsabilidade é entregar o dado.
+* **Acoplamento Fraco (*Loose Coupling*):** O Sujeito não possui conhecimento sobre as implementações concretas dos observadores (seja uma View WPF, um serviço de log ou uma API externa). A interação ocorre estritamente via **Interface**, permitindo que o sistema evolua sem dependências rígidas.
+* **Inversão de Controle:** A lógica de comunicação é invertida; em vez de a interface requisitar dados, o motor de dados "empurra" (*push*) a informação para a interface no exato momento da mudança.
+* **Comunicação em *Broadcast*:** A notificação é propagada para todos os assinantes simultaneamente. O Sujeito foca exclusivamente na entrega do dado, sem se responsabilizar pelo processamento individual de cada observador.
 
 ### Representação Técnica
-Para implementar esse padrão, define-se um contrato (Interface) que todos os observadores devem seguir. Geralmente, essa interface possui um método central:
 
-> **`Atualizar(dados)`**: Este método é o ponto de entrada da notificação. Quando o Sujeito detecta uma mudança, ele percorre sua lista de inscritos e dispara este método para cada um deles, passando o novo estado como parâmetro.
+Para a viabilização deste padrão, define-se um contrato (Interface) que padroniza a comunicação. O método central deste contrato é:
+
+> **`Atualizar(dados)`**: Este método atua como o ponto de entrada da notificação. Ao detectar uma mudança, o Sujeito percorre sua lista de inscritos e dispara este método para cada um deles, transmitindo o novo estado como parâmetro.
 ---
 
 ## 3. Problema que Resolve
