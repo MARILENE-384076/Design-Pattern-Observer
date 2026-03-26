@@ -171,7 +171,7 @@ A economia de processamento é vital em aplicações Desktop desenvolvidas em **
 
 Abaixo, as capturas de tela demonstram o comportamento do padrão **Observer** em tempo real. Observe a mudança automática de cores e o preenchimento do gráfico à medida que o **Motor de Mercado** notifica a **ViewModel**.
 
-| Tela da Aplicação (Esquerda) | Tela da Aplicação N (Direita) |
+| Tela da Aplicação em Alta | Tela da Aplicação em Baixa |
 | :---: | :---: |
 | ![Tela da Aplicação](./Imagens/Tela%20da%20Aplica%C3%A7%C3%A3o.png) | ![Tela da Aplicação N](./Imagens/Tela%20da%20Aplica%C3%A7%C3%A3o%20N.png) |
 | *Estado de Atualização / Alta* | *Estado de Atualização / Queda* |
