@@ -84,12 +84,16 @@ Em sistemas de monitoramento financeiro, é comum que diversos componentes (Grá
 
 A arquitetura deste projeto foi projetada para garantir a separação total entre a lógica de geração de dados e a camada de apresentação. A estrutura utiliza o padrão **Observer** como o mecanismo de comunicação central, integrando-se ao padrão **MVVM** (*Model-View-ViewModel*) para o ambiente WPF.
 
+<p align="center">
+  <img src="./Imagens/Estrutura%20do%20projeto.png" alt="Estrutura do projeto" width="20%">
+</p>
+
 ### 4.1. Diagrama de Classes
 
 O diagrama abaixo ilustra a hierarquia e as relações de dependência do sistema. Observa-se que o núcleo da aplicação (Motor) interage apenas com abstrações, desconhecendo as implementações concretas das ViewModels.
 
 <p align="center">
-  <img src="./Imagens/Estrutura%20d0%20projeto.png" alt="Estrutura do projeto" width="500">
+  <img src="./Imagens/Diagrama%20de%20Classe.png" alt="Diagrama de Classe" width="500">
 </p>
 
 ### 4.2. Descrição dos Componentes e Relacionamentos
@@ -106,7 +110,7 @@ Com base na modelagem apresentada, a estrutura divide-se em:
 O funcionamento operacional do sistema segue um ciclo reativo dividido em três etapas fundamentais, conforme ilustrado no diagrama de sequência abaixo:
 
 <p align="center">
-  <img src="./Imagens/diagrama%20de%20sequencia.png" alt="Diagrama de Sequência Observer" width="800">
+  <img src="./Imagens/diagrama%20de%20sequencia.png" alt="Diagrama de Sequência Observer" width="500">
 </p>
 
 1. **Registro (Inscrição):** Durante a inicialização, a `MainWindow` instancia a `ViewModel` e o `MotorMercado`. A `MonitorAcoesViewModel` solicita sua inclusão na lista de observadores do motor através do método `Inscrever(vm)`.
