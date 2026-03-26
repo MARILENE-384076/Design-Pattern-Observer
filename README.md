@@ -93,7 +93,7 @@ A arquitetura deste projeto foi projetada para garantir a separação total entr
 O diagrama abaixo ilustra a hierarquia e as relações de dependência do sistema. Observa-se que o núcleo da aplicação (Motor) interage apenas com abstrações, desconhecendo as implementações concretas das ViewModels.
 
 <p align="center">
-  <img src="./Imagens/Diagrama%20de%20Classe.png" alt="Diagrama de Classe" width="500">
+  <img src="./Imagens/diagrama%20de%20classe.png" alt="Diagrama de Classe" width="500">
 </p>
 
 ### 4.2. Descrição dos Componentes e Relacionamentos
