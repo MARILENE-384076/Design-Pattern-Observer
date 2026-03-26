@@ -166,6 +166,16 @@ Sistemas financeiros são modulares e evolutivos. Uma aplicação que hoje monit
 A economia de processamento é vital em aplicações Desktop desenvolvidas em **C#/WPF**.
 * **Modelo Pull (Ineficiente):** Se 10 janelas distintas fizessem requisições constantes ao motor, haveria um tráfego de dados redundante e alto consumo de CPU.
 * **Modelo Push (Eficiente):** No fluxo do Observer, o processamento só é disparado quando há uma mudança real no estado do dado. Isso otimiza o uso de memória e threads, permitindo que a aplicação permaneça fluida mesmo com múltiplos ativos sendo monitorados.
+
+### 6.5. Demonstração da Interface (View)
+
+Abaixo, as capturas de tela demonstram o comportamento do padrão **Observer** em tempo real. Observe a mudança automática de cores e o preenchimento do gráfico à medida que o **Motor de Mercado** notifica a **ViewModel**.
+
+| Tela da Aplicação (Esquerda) | Tela da Aplicação N (Direita) |
+| :---: | :---: |
+| ![Tela da Aplicação](./Imagens/Tela%20da%20Aplica%C3%A7%C3%A3o.png) | ![Tela da Aplicação N](./Imagens/Tela%20da%20Aplica%C3%A7%C3%A3o%20N.png) |
+| *Estado de Atualização / Alta* | *Estado de Atualização / Queda* |
+  
 ---
 ### 7.1. Camada de Modelo (Model)
 
